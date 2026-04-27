@@ -6,18 +6,49 @@ public class MortgageCalculator {
         Scanner scanner = new Scanner(System.in);
         NumberFormat currency = NumberFormat.getCurrencyInstance();
 
-        System.out.print("Principal: ");
-        int principal = scanner.nextInt();
-        System.out.print("Annual Interest Rate: ");
-        double rate = ((scanner.nextDouble() / 100) / 12);
-        System.out.print("Period (Years): ");
-        int period = scanner.nextInt();
+        int principal = 0;
+        double rate = 0;
+        int numberOfPayments = 0;
+        int years = 0;
 
-        double numerator = rate * Math.pow((1 + rate), (period * 12));
-        double denominator = Math.pow((1+rate), (period * 12)) - 1;
+        while (true) {
+            System.out.print("Principal: ");
+            principal = scanner.nextInt();
+            if (principal >= 1000 && principal <= 1_000_000) {
+                break;
+            }
+            System.out.println("Enter a value between 1000 and 1000000");
+        }
+
+        final byte PERCENT = 100;
+        final byte MONTHS_IN_YEAR = 12;
+
+        while (true) {
+            System.out.print("Annual Interest Rate: ");
+            rate = scanner.nextFloat();
+            if (rate >= 1 && rate <= 30) {
+                rate = (rate / PERCENT / MONTHS_IN_YEAR);
+                break;
+            }
+            System.out.println("Enter a value between 1 and 30");
+        }
+
+        while (true) {
+            System.out.print("Period (Years): ");
+            years = scanner.nextInt();
+            if (years >= 1 && years <= 30) {
+                numberOfPayments = years * MONTHS_IN_YEAR;
+                break;
+            }
+            System.out.println("Enter a value between 1 and 30");
+        }
+
+        double numerator = rate * Math.pow((1 + rate), (numberOfPayments));
+        double denominator = Math.pow((1+rate), (numberOfPayments)) - 1;
         double payment  = principal * numerator / denominator;
+
         String result = currency.format(payment);
-        System.out.print(result);
+        System.out.print("Monthly Payment: "+ result);
 
     }
 }
